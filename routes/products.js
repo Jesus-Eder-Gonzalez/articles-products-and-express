@@ -26,6 +26,7 @@ router.route('/')
     });
   })
   .post((req, res) => {
+    // res.setHeader({})
     res.send('smoketest POST');
   });
 
@@ -48,7 +49,7 @@ router.route('/')
     res.redirect('localhost:8080/products');
   });
 
-  routerId.route('/')
+  routerId.route('/edit')
   .get((req, res) => {
     let catalog = prodDB.getProd(req.params.id);
     let hasProd = catalog? !!Object.keys(catalog).length :false;

@@ -5,7 +5,7 @@ const products = require('./routes/products');
 const bodyParser = require('body-parser');
 const exphbs = require('express-handlebars');
 
-const PORT = process.env.PORT || 8080;
+// const PORT = process.env.PORT || 8080;
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -17,6 +17,9 @@ app.engine('.hbs', exphbs({
 app.set('view engine', '.hbs');
 
 app.use('/products', products);
+app.get('/endpoint', (req,res) => {
+  res.json({success:true});
+});
 // app.get('/', (req, res) => {
 //   const locals = {
 //     greeting: 'Aloha',
@@ -29,6 +32,8 @@ app.use('/products', products);
 //   };
 //   res.render('home', locals);
 // });
-app.listen(PORT, () => {
-  process.stdout.write(`Server started on port: ${PORT}\n`);
-});
+
+// app.listen(PORT, () => {
+//   process.stdout.write(`Server started on port: ${PORT}\n`);
+// });
+module.exports = app;
