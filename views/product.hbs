@@ -1,0 +1,19 @@
+<h1>{{currentDBName}}</h1>
+<ol>
+  {{#if notEmpty}}
+  <li>
+    <div>Product Name: {{name}}</div>
+    <div>Price: ${{price}}</div>
+    <div>Inventory: {{inventory}}</div>
+    {{#if desc}}
+    <p>
+      {{desc}}
+    </p>
+    {{/if}}
+  </li>
+  {{else}}
+  <h3>This product does not exist</h3>
+  {{/if}}
+</ol>
+
+{{>footer}}

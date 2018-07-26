@@ -1,0 +1,19 @@
+<h1>{{currentDBName}}</h1>
+<ol>
+  {{#if notEmpty}} {{#each catalog}}
+  <li>
+    <div>Product Name: {{name}}</div>
+    <div>Price: ${{price}}</div>
+    <div>Inventory: {{inventory}}</div>
+    {{#if desc}}
+    <p>
+      {{desc}}
+    </p>
+    {{/if}}
+  </li>
+  {{/each}} {{else}}
+  <h3>There are currently no products.</h3>
+  {{/if}}
+</ol>
+
+{{>footer}}
