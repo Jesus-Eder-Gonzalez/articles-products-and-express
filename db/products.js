@@ -1,17 +1,20 @@
 'use strict';
 
 function productDB() {
-  const _productArr = [{name: 'slinky', price:100.00, inventory:10}];
+  const _productArr = [{id: 3290, name: 'slinky', price:100.00, inventory:10}];
   // const _productArr = [];
-  const nameToID = {};
+  const idToArrInx = {3290:0};
+  const nameToArrInx = {'slinky':0};
 
   function addItem(itemObj) {
     let retObj;
-    if (!nameToID[itemObj.name]) {
-      if (itemObj.name &&
+    if (!nameToArrInx[itemObj.name]) {
+      if (itemObj.id &&
+        itemObj.name &&
         itemObj.price &&
         itemObj.inventory) {
-        nameToID[itemObj.name] = _productArr.length;
+        nameToArrInx[itemObj.name] = _productArr.length;
+        idToArrInx[itemObj.id] = _productArr.length;
         _productArr.push(itemObj);
         retObj = { success: true };
       } else {
@@ -29,54 +32,54 @@ function productDB() {
     return retObj;
   }
 
-  function editItem(productID, objEditFields) {
+  function editItem(uid, objEditFields) {
     let retObj;
 
-    if (_productArr[productID]) {
+    if (_productArr[idToArrInx[uid]]) {
       let keys = Object.keys(objEditFields);
       if (keys.length > 0) {
-        let temp = _productArr[productID];
+        let temp = _productArr[idToArrInx[uid]];
         keys.forEach(key => {
           temp[key] = objEditFields[key];
         });
-        _productArr[productID] = temp;
-        retObj = { success: true, productID: productID };
+        _productArr[idToArrInx[uid]] = temp;
+        retObj = { success: true, id: uid };
       } else {
         retObj = {
           success: false,
           reason: 'No product fields were provided. Change to name, price, or inventory.',
-          productID: productID
+          id: uid
         };
       }
     } else {
       retObj = {
         success: false,
         reason: 'Item does not exist, try a POST request to create the item.',
-        productID: productID
+        id: uid
       };
     }
     return retObj;
   }
 
-  function removeItem(productID) {
+  function removeItem(uid) {
     let retObj;
 
-    if (_productArr[productID]) {
-      _productArr[productID] = {};
-      retObj = { success: true, productID: productID };
+    if (_productArr[idToArrInx[uid]]) {
+      _productArr[idToArrInx[uid]] = '';
+      retObj = { success: true, uid: uid };
     } else {
       retObj = {
         success: false,
         reason: 'Item does not exist, try a POST request to create the item.',
-        productID: productID
+        id: uid
       };
     }
 
     return retObj;
   }
 
-  function returnItem(id) {
-    return _productArr[id];
+  function returnItem(uid) {
+    return _productArr[idToArrInx[uid]];
   }
 
 

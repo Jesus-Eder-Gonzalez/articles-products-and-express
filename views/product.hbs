@@ -1,19 +1,30 @@
 <h1>{{currentDBName}}</h1>
-<ol>
-  {{#if notEmpty}}
-  <li>
-    <div>Product Name: {{name}}</div>
-    <div>Price: ${{price}}</div>
-    <div>Inventory: {{inventory}}</div>
-    {{#if desc}}
-    <p>
-      {{desc}}
-    </p>
-    {{/if}}
-  </li>
-  {{else}}
-  <h3>This product does not exist</h3>
-  {{/if}}
-</ol>
 
-{{>footer}}
+{{#if notEmpty}}
+
+<div>Product Name: {{name}}</div>
+<div>Price: ${{price}}</div>
+<div>Inventory: {{inventory}}</div>
+{{#if desc}}
+<p>
+  {{desc}} {{!-- Pudding pastry jelly. Donut cake caramels sugar plum chocolate bar tart gummies. Cupcake cake macaroon tart
+  macaroon gingerbread jelly beans. Marzipan chocolate gingerbread cheesecake dragée oat cake sugar plum sugar plum jujubes.
+  Pie cupcake sugar plum gummies cotton candy lemon drops muffin gummi bears cotton candy. Lemon drops cheesecake jelly.
+  Sweet biscuit toffee jelly beans bear claw wafer chocolate cake. Cake sugar plum bonbon. Macaroon chocolate cake candy
+  canes oat cake danish gummies. Chocolate bar gingerbread biscuit halvah oat cake icing. Sweet halvah jelly soufflé cupcake.
+  Gummi bears soufflé liquorice powder bear claw jelly beans sesame snaps. --}}
+</p>
+{{/if}}
+<form action='/products/{{id}}/edit' method='get'>
+  <button type='submit'>Edit this Product</button>
+</form>
+<form action="/products/{{id}}" method="POST" enctype="application/x-www-form-urlencoded">
+  <input type="hidden" name="_method" value="DELETE">
+  <input type="submit" value="Delete Product">
+</form>
+<form action="/products/" method="GET">
+  <input type="submit" value="Product Index">
+</form>
+{{else}}
+<h3>This product does not exist</h3>
+{{/if}}
