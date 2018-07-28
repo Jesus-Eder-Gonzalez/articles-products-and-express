@@ -1,0 +1,23 @@
+<h1>{{currentDBName}}</h1>
+
+{{#if title}}
+
+<div>Title: {{title}}</div>
+<div>Author: {{author}}</div>
+<p>
+  {{body}} 
+</p>
+
+<form action='/articles/{{urlTitle}}/edit' method='get'>
+  <button type='submit'>Edit this article</button>
+</form>
+<form action="/articles/{{urlTitle}}" method="POST" enctype="application/x-www-form-urlencoded">
+  <input type="hidden" name="_method" value="DELETE">
+  <input type="submit" value="Delete article">
+</form>
+<form action="/articles/" method="GET">
+  <input type="submit" value="Article index">
+</form>
+{{else}}
+<h3>This article does not exist</h3>
+{{/if}}

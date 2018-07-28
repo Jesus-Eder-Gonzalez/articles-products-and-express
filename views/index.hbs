@@ -6,14 +6,7 @@
     <div>Product Name:
       <a href="/products/{{id}}">{{name}}</a>
     </div>
-    <div>Price: ${{price}}</div>
-    <div>Inventory: {{inventory}}</div>
 
-    {{#if desc}}
-    <p>
-      {{desc}}
-    </p>
-    {{/if}}
   </li>
   {{/each}} {{else}}
   <h3>There are currently no products.</h3>

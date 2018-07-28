@@ -1,0 +1,23 @@
+<h1>{{currentDBName}}</h1>
+
+<h2>Create a new article</h2>
+<form id='newForm' action="/articles/" method="POST" enctype="application/x-www-form-urlencoded">
+  <label for="title">Title:</label>
+  <input type="text" id="title" name="title" placeholder="Article Title" value={{#if title}}{{title}}{{else}} ""{{/if}}>
+    <br><br>
+  <label for="author">Author:</label>
+  <input type="text" id="author" name="author" placeholder="Article Author" value={{#if author}}{{author}}{{else}} ""{{/if}}>
+    <br><br>
+  <label for="body">Article:</label>
+  <textarea form='newForm' id="body" name='body' placeholder="Actual Article" cols=80 rows=50>{{#if body}}{{body}}{{else}}{{/if}}</textarea>
+    <br><br>
+  <input type="submit" value="SUBMIT">
+</form>
+    <br><br>
+<form action="/articles/{{urlTitle}}" method="POST" enctype="application/x-www-form-urlencoded">
+<input type="hidden" name="_method" value="DELETE">
+  <input type="submit" value="DELETE PRODUCT">
+</form>
+{{#if reason}}
+<p>{{reason}}</p>
+{{/if}}

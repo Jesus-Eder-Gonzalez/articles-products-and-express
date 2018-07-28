@@ -1,10 +1,26 @@
 'use strict';
 
 function productDB() {
-  const _productArr = [{id: 3290, name: 'slinky', price:100.00, inventory:10}];
+  const _productArr = [{
+    id: 3290,
+    name: 'Slinky',
+    price: 100.00,
+    inventory: 10
+  }, {
+    id: 4021,
+    name: 'Gak',
+    price: 5.99,
+    inventory: 100
+  }];
   // const _productArr = [];
-  const idToArrInx = {3290:0};
-  const nameToArrInx = {'slinky':0};
+  const idToArrInx = {
+    3290: 0,
+    4021: 1
+  };
+  const nameToArrInx = {
+    'slinky': 0,
+    'gak': 1
+  };
 
   function addItem(itemObj) {
     let retObj;

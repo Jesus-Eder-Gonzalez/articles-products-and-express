@@ -1,0 +1,18 @@
+<h1>{{currentDBName}}</h1>
+<ol>
+  {{#if articles}} {{#each articles}}
+  <li>
+    <div>Title:
+      <a href="/articles/{{urlTitle}}">{{title}}</a>
+    </div>
+  </li>
+  {{/each}} {{else}}
+  <h3>There are currently no articles.</h3>
+  {{/if}}
+</ol>
+<form action='/articles/new' method='get'>
+  <button type='submit'>Add a new article</button>
+</form>
+{{#if reason}}
+<h3>{{reason}}</h3>
+{{/if}} {{#if delete}} {{>footer}} {{/if}}

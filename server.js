@@ -4,6 +4,7 @@ const express = require('express');
 const methodOverride = require('method-override');
 
 const products = require('./routes/products');
+const articles = require('./routes/articles');
 const bodyParser = require('body-parser');
 const exphbs = require('express-handlebars');
 
@@ -27,6 +28,7 @@ app.engine('.hbs', exphbs({
 app.set('view engine', '.hbs');
 
 app.use('/products', products);
+app.use('/articles', articles);
 
 app.listen(PORT, () => {
   process.stdout.write(`Server started on port: ${PORT}\n`);
