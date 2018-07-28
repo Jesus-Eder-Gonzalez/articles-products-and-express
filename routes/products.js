@@ -12,7 +12,7 @@ router.route('/')
   .get((req, res) => {
     console.log('locals: '+app.locals.error);
     if (app.locals.error) {
-      res.render('index', {
+      res.render('./products/index', {
         'currentDBName': 'Product Catalog',
         'reason': app.locals.error.reason,
         'notEmpty': false
@@ -23,7 +23,7 @@ router.route('/')
       catalog = catalog.filter(item => item.hasOwnProperty('name'));
       let hasProd = catalog.length > 0 ? true : false;
       console.log(catalog);
-      res.render('index', {
+      res.render('./products/index', {
         'currentDBName': 'Product Catalog',
         'catalog': catalog,
         'notEmpty': hasProd
@@ -68,10 +68,10 @@ router.route('/new')
     console.log('products/new');
     console.log(app.locals.error);
     if (app.locals.error) {
-      res.render('new', app.locals.error);
+      res.render('./products/new', app.locals.error);
       app.locals.error = '';
     } else {
-      res.render('new');
+      res.render('./products/new');
     }
   })
 
@@ -80,13 +80,13 @@ router.route('/:id/edit')
     console.log('/products/:id/edit');
     console.log(req.params)
     if (app.locals.error) {
-      res.render('edit', app.locals.error);
+      res.render('./products/edit', app.locals.error);
       app.locals.error = '';
     } else {
       let catalog = prodDB.getProd(req.params.id);
       let hasProd = catalog ? !!Object.keys(catalog).length : false;
       if (hasProd) {
-        res.render('edit', Object
+        res.render('./products/edit', Object
           .assign({
             'currentDBName': 'Product Catalog',
             'notEmpty': hasProd
@@ -104,7 +104,7 @@ router.route('/:id')
     let catalog = prodDB.getProd(req.params.id);
     let hasProd = catalog ? !!Object.keys(catalog).length : false;
 
-    res.render('product', Object
+    res.render('./products/product', Object
       .assign({
         'currentDBName': 'Product Catalog',
         'notEmpty': hasProd
