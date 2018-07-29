@@ -6,6 +6,7 @@ const router = express.Router();
 const articleDB = require('../db/articles');
 
 let artDB = articleDB();
+
 router.route('/')
   .get((req, res) => {
     let articles = artDB.getArticles();

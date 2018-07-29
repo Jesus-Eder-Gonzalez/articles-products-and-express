@@ -12,7 +12,7 @@ function productDB() {
     price: 5.99,
     inventory: 100
   }];
-  // const _productArr = [];
+
   const idToArrInx = {
     3290: 0,
     4021: 1
@@ -22,9 +22,12 @@ function productDB() {
     'gak': 1
   };
 
+  //A function that adds an item to the array. 
   function addItem(itemObj) {
-    let retObj;
-    if (!nameToArrInx[itemObj.name]) {
+
+    let retObj; //Return Object
+
+    if (!nameToArrInx[itemObj.name]) { //Checks
       if (itemObj.id &&
         itemObj.name &&
         itemObj.price &&
