@@ -32,8 +32,13 @@ app.engine('.hbs', exphbs({
 
 app.set('view engine', '.hbs');
 
+app.use(express.static('public'));
 app.use('/products', products);
 app.use('/articles', articles);
+
+app.get('*', (req,res)=>{
+  res.status(404).render('error');
+});
 
 app.listen(PORT, () => {
   process.stdout.write(`Server started on port: ${PORT}\n`);

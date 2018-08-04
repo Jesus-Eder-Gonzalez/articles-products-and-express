@@ -1,6 +1,7 @@
 <h1>{{currentDBName}}</h1>
 <ol>
-  {{#if notEmpty}} {{#each catalog}}
+{{#if catalog}}
+{{#each catalog}}
   <li>
 
     <div>Product Name:
@@ -8,13 +9,15 @@
     </div>
 
   </li>
-  {{/each}} {{else}}
+{{/each}} {{else}}
   <h3>There are currently no products.</h3>
   {{/if}}
 </ol>
 <form action='/products/new' method='get'>
   <button type='submit'>Add a new product</button>
 </form>
+{{#each errors}}
 {{#if reason}}
 <h3>{{reason}}</h3>
-{{/if}} {{#if delete}} {{>footer}} {{/if}}
+
+{{/if}} {{/each}}

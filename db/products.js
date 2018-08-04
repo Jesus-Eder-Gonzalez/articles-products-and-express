@@ -98,6 +98,7 @@ function productDB() {
   }
 
   function returnItem(uid) {
+    console.log(uid);
     return _productArr[idToArrInx[uid]];
   }
 
