@@ -8,10 +8,10 @@
   {{body}} 
 </p>
 
-<form action='/articles/{{urlTitle}}/edit' method='get'>
+<form action='/articles/{{url_title}}/edit' method='get'>
   <button type='submit'>Edit this article</button>
 </form>
-<form action="/articles/{{urlTitle}}" method="POST" enctype="application/x-www-form-urlencoded">
+<form action="/articles/{{url_title}}" method="POST" enctype="application/x-www-form-urlencoded">
   <input type="hidden" name="_method" value="DELETE">
   <input type="submit" value="Delete article">
 </form>

@@ -1,84 +1,98 @@
-'use strict';
-const express = require('express');
+"use strict";
+const express = require("express");
 const app = express();
 const router = express.Router();
+const { sendError } = require("../helper/errorHandler");
+const artDB = require("../db/articles");
 
-const articleDB = require('../db/articles');
+const articleDB = artDB();
 
-let artDB = articleDB();
+const renderParams = function(dbResults, type) {
+  switch (type) {
+    case "all":
+      return {
+        currentDBName: "Article Repository",
+        articles: dbResults
+      };
+    default:
+      return {
+        currentDBName: "Article Repository",
+        ...dbResults
+      };
+  }
+};
 
-router.route('/')
+router
+  .route("/")
   .get((req, res) => {
-    let articles = artDB.getArticles();
-
-    console.log(articles);
-
-    res.render('./articles/index', Object.assign({
-      currentDBName: 'Article Repository'
-    },
-      { articles: articles }));
+    articleDB
+      .getArticles()
+      .then(results => {
+        res.render("./articles/index", renderParams(results, "all"));
+      })
+      .catch(err => {
+        sendError(req.originalUrl, res, err);
+      });
   })
   .post((req, res) => {
-    let success = artDB.addArticle(encodeURIComponent(req.body.title), req.body);
-
-    if (!success) {
-      res.send('This article already exists');
-    }
-
-    let articles = artDB.getArticle(encodeURIComponent(req.body.title));
-    console.log('inserted',articles);
-    res.redirect(`./${encodeURIComponent(req.body.title)}`);
+    articleDB
+      .addArticle(encodeURIComponent(req.body.title), req.body)
+      .then(success => {
+        if (!success) {
+          throw new Error("This article already exists");
+        }
+      })
+      .then(() => {
+        res.redirect(`./${encodeURIComponent(req.body.title)}`);
+      })
+      .catch(err => {
+        sendError(req.originalUrl, res, err);
+      });
   });
 
-router.route('/new')
+router.route("/new").get((req, res) => {
+  res.render("./articles/new", renderParams());
+});
+
+router.route("/:title/edit").get((req, res) => {
+  return articleDB
+    .getArticle(encodeURIComponent(req.params.title))
+    .then(article => {
+      res.render("./articles/edit", renderParams(article));
+    })
+    .catch(err => {
+      sendError(req.originalUrl, res, err);
+    });
+});
+
+router
+  .route("/:title")
   .get((req, res) => {
-    let articles = artDB.getArticle(req.params.id);
-
-    console.log(articles);
-
-    res.render('./articles/new', Object.assign({
-      currentDBName: 'Article Repository'
-    },
-      articles));
-  });
-
-
-router.route('/:title/edit')
-  .get((req, res) => {
-    let articles = artDB.getArticle(encodeURIComponent(req.params.title));
-
-    console.log(articles);
-    console.log(articles.body);
-
-    res.render('./articles/edit', Object.assign({
-      currentDBName: 'Article Repository'
-    },
-      articles));
-  });
-
-router.route('/:title')
-  .get((req, res) => {
-    let articles = artDB.getArticle(encodeURIComponent(req.params.title));
-    console.log('articles :', articles);
-    console.log(req.params.title);
-
-    res.render('./articles/article', Object.assign({
-      currentDBName: 'Article Repository'
-    },
-      articles));
+    return articleDB
+      .getArticle(encodeURIComponent(req.params.title))
+      .then(article => {
+        res.render("./articles/article", renderParams(article));
+      })
+      .catch(err => {
+        sendError(req.originalUrl, res, err);
+      });
   })
   .put((req, res) => {
-    let success = artDB.editArticle(encodeURIComponent(req.params.title), req.body);
-
-    let articles = artDB.getArticle(encodeURIComponent(req.params.title));
-    console.log(articles);
-    res.redirect(`/articles/${req.params.title}`);
+    return articleDB
+      .editArticle(encodeURIComponent(req.params.title), {
+        ...req.body,
+        url_title: encodeURIComponent(req.body.title)
+      })
+      .then(() => {
+        return res.redirect(`/articles/${encodeURIComponent(req.body.title)}`);
+      })
+      .catch(err => {
+        sendError(req.originalUrl, res, err);
+      });
   })
-  .delete((req,res) => {
-    artDB.removeArticle(encodeURIComponent(req.params.title));
-    res.redirect('/articles');
+  .delete((req, res) => {
+    articleDB.removeArticle(encodeURIComponent(req.params.title));
+    res.redirect("/articles");
   });
-
-
 
 module.exports = router;

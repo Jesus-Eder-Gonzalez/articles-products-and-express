@@ -1,6 +1,6 @@
 <h1>{{currentDBName}}</h1>
 <h2>Edit an existing article</h2>
-<form id='editForm' action="/articles/{{urlTitle}}/" method="POST" enctype="application/x-www-form-urlencoded">
+<form id='editForm' action="/articles/{{url_title}}/" method="POST" enctype="application/x-www-form-urlencoded">
 <input type="hidden" name="_method" value="PUT">
   <label for="title">Title:</label>
   <input type="text" id="title" name="title" placeholder="Article Title" value="{{title}}">
@@ -14,7 +14,7 @@
   <input type="submit" value="SUBMIT">
 </form>
     <br><br>
-<form action="/articles/{{urlTitle}}" method="POST" enctype="application/x-www-form-urlencoded">
+<form action="/articles/{{url_title}}" method="POST" enctype="application/x-www-form-urlencoded">
 <input type="hidden" name="_method" value="DELETE">
   <input type="submit" value="DELETE PRODUCT">
 </form>
