@@ -8,7 +8,7 @@
 
   <label for="inventory">Inventory:</label>
   <input type="text" id="inventory" name="inventory" placeholder="Current Product Inventory" value={{#if inventory}}{{inventory}}{{else}}""{{/if}}>
-  <input type="submit" value="OK">
+  <input type="submit" value="SUBMIT">
 </form>
 {{#if reason}}
 <p>{{reason}}</p>
@@ -17,3 +17,5 @@
 {{#each typeReasons}}
   <h4 style='color:red'>Error: {{typeReason}}</h4>
 {{/each}}
+
+{{>indexButtons}}

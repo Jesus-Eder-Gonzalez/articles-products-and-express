@@ -1,4 +1,4 @@
-<h1>{{currentDBName}}</h1>
+<h1><a href="/articles/">{{currentDBName}}</a></h1>
 
 {{#if title}}
 
@@ -15,9 +15,9 @@
   <input type="hidden" name="_method" value="DELETE">
   <input type="submit" value="Delete article">
 </form>
-<form action="/articles/" method="GET">
-  <input type="submit" value="Article index">
-</form>
+
 {{else}}
 <h3>This article does not exist</h3>
 {{/if}}
+
+{{>indexButtons}}
