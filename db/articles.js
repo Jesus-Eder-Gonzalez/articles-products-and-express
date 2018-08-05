@@ -46,7 +46,7 @@ function articleDB() {
         }
       })
       .then(() => {
-        return db('articles')
+        return db("articles")
           .insert(temp)
           .returning("*")
           .then(result => {
@@ -70,15 +70,26 @@ function articleDB() {
   }
 
   function removeArticle(urlTitle) {
-    let success;
-    success = getArticle(urlTitle);
-    if (!success) {
-      return success;
-    }
-
-    _articleArr.splice(urlTitleToArrInx[urlTitle], 1);
-
-    return true;
+    return db("articles")
+      .select()
+      .where({ url_title: urlTitle })
+      .then(result => {
+        if (!result.length) {
+          throw new Error(`Article does not exist`);
+        }
+        return result[0];
+      })
+      .then(article => {
+        return db("articles")
+          .where(article)
+          .del()
+          .then(result => {
+            if (!result) {
+              throw new Error("Delete has failed");
+            }
+            return true;
+          });
+      });
   }
 
   return {

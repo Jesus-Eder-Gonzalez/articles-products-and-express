@@ -1,26 +1,12 @@
 "use strict";
+
 const express = require("express");
-const app = express();
 const router = express.Router();
 const { sendError } = require("../helper/errorHandler");
 const artDB = require("../db/articles");
+const { renderParams } = require("../helper/standardMessage");
 
 const articleDB = artDB();
-
-const renderParams = function(dbResults, type) {
-  switch (type) {
-    case "all":
-      return {
-        currentDBName: "Article Repository",
-        articles: dbResults
-      };
-    default:
-      return {
-        currentDBName: "Article Repository",
-        ...dbResults
-      };
-  }
-};
 
 router
   .route("/")
@@ -91,8 +77,14 @@ router
       });
   })
   .delete((req, res) => {
-    articleDB.removeArticle(encodeURIComponent(req.params.title));
-    res.redirect("/articles");
+    return articleDB
+      .removeArticle(encodeURIComponent(req.params.title))
+      .then(() => {
+        res.redirect("/articles");
+      })
+      .catch(err => {
+        sendError(req.originalUrl, res, err);
+      });
   });
 
 module.exports = router;
