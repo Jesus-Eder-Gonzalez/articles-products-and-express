@@ -4,26 +4,27 @@ const express = require("express");
 const app = express();
 const router = express.Router();
 
-const productDB = require("../db/products");
+const prodDB = require("../db/products");
 const errorRender = require("../helper/errorRender");
-let prodDB = productDB();
+const { renderParamsP } = require("../helper/standardMessage");
+const { sendError } = require("../helper/errorHandler");
+
+let productDB = prodDB();
 
 router
   .route("/")
   .get((req, res) => {
-    let catalog = prodDB.prodCatalog();
-    let renderErrorObj = {};
-    let renderParamObj = {
-      currentDBName: "Product Catalog",
-      catalog
-    };
-
-    renderErrorObj = errorRender(res, app);
-    renderParamObj = renderErrorObj
-      ? Object.assign(renderParamObj, renderErrorObj)
-      : renderParamObj;
-
-    res.render("./products/index", renderParamObj);
+    return productDB
+      .returnProducts()
+      .then(products => {
+        res.render(
+          "./products/index",
+          renderParamsP(products, errorRender(res, app), "all")
+        );
+      })
+      .catch(err => {
+        sendError(req.originalUrl, res, err);
+      });
   })
   .post((req, res) => {
     console.log(req.params);
@@ -39,7 +40,7 @@ router
         inventory: Number(req.params.inventory)
       };
 
-      let success = prodDB.addProd(passObj);
+      let success = productDB.addProd(passObj);
 
       console.log(`POST success: ${success}`);
       console.log(success.success);
@@ -58,69 +59,47 @@ router
   });
 
 router.route("/new").get((req, res) => {
-  console.log(res.locals);
-  console.log("products/new");
-  console.log(app.locals.error);
-  if (app.locals.error) {
-    res.render("./products/new", app.locals.error);
-    app.locals.error = "";
-  } else {
-    res.render("./products/new");
-  }
+  res.render("./products/new", errorRender(res, app));
 });
 
 router.route("/:id/edit").get((req, res) => {
-  console.log("/products/:id/edit");
-  console.log(req.error);
-  if (app.locals.error) {
-    res.render("./products/edit", app.locals.error);
-    app.locals.error = "";
-  } else {
-    let catalog = prodDB.getProd(req.params.id);
-    let hasProd = catalog ? !!Object.keys(catalog).length : false;
-    if (hasProd) {
+  return productDB
+    .returnProduct(req.params.id)
+    .then(product => {
       res.render(
         "./products/edit",
-        Object.assign(
-          {
-            currentDBName: "Product Catalog",
-            notEmpty: hasProd
-          },
-          catalog
-        )
+        renderParamsP(product, errorRender(res, app))
       );
-    } else {
-      res.redirect("/products");
-    }
-  }
+    })
+    .catch(err => {
+      sendError(req.originalUrl, res, err);
+    });
 });
 
 router
   .route("/:id")
   .get((req, res) => {
-    console.log("/products/:id");
-    console.log(req.params.id);
-    let catalog = prodDB.getProd(req.params.id);
-    console.log(catalog);
-    res.render(
-      "./products/product",
-      Object.assign(
-        {
-          currentDBName: "Product Catalog"
-        },
-        catalog
-      )
-    );
+    productDB
+      .returnProduct(req.params.id)
+      .then(product => {
+        res.render(
+          "./products/product",
+          renderParamsP(product, errorRender(res, app))
+        );
+      })
+      .catch(err => {
+        sendError(req.originalUrl, res, err);
+      });
   })
   .put((req, res) => {
     console.log("/products/:id/put");
     console.log(req.params);
     let success;
-    let catalog = prodDB.getProd(req.params.id);
+    let catalog = productDB.getProd(req.params.id);
     let hasProd = catalog ? !!Object.keys(catalog).length : false;
 
     if (hasProd) {
-      success = prodDB.editProd(req.params.id, req.params);
+      success = productDB.editProd(req.params.id, req.params);
 
       console.log("Success Edit: " + success);
       console.log(success);
@@ -135,13 +114,13 @@ router
   })
   .delete((req, res) => {
     console.log("/products/:id/put");
-    let catalog = prodDB.removeProd(req.params.id);
+    let catalog = productDB.removeProd(req.params.id);
     console.log("delete: " + catalog);
     console.log(catalog);
     if (catalog.success) {
       res.redirect("/products");
     } else {
-      if (prodDB.getProd(req.params.id)) {
+      if (productDB.getProd(req.params.id)) {
         app.locals.error = Object.assign(
           { reason: "Error processing delete, please try again." },
           { id: req.params.id }

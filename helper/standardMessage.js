@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 const renderParams = function(dbResults, type) {
   switch (type) {
@@ -15,4 +15,24 @@ const renderParams = function(dbResults, type) {
   }
 };
 
-module.exports = {renderParams};
+const renderParamsP = function(dbResults, errRender, type) {
+  switch (type) {
+    case "all":
+      return {
+        currentDBName: "Product Catalog",
+        products: dbResults,
+        reasons: errRender
+      };
+    default:
+      return {
+        currentDBName: "Product Catalog",
+        reasons: errRender,
+        ...dbResults
+      };
+  }
+};
+
+module.exports = {
+  renderParams,
+  renderParamsP
+};

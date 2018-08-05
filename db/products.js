@@ -1,54 +1,14 @@
-'use strict';
+"use strict";
+
+const db = require("./knex");
 
 function productDB() {
-  const _productArr = [{
-    id: 3290,
-    name: 'Slinky',
-    price: 100.00,
-    inventory: 10
-  }, {
-    id: 4021,
-    name: 'Gak',
-    price: 5.99,
-    inventory: 100
-  }];
-
-  const idToArrInx = {
-    3290: 0,
-    4021: 1
-  };
-  const nameToArrInx = {
-    'slinky': 0,
-    'gak': 1
-  };
-
-  //A function that adds an item to the array. 
-  function addItem(itemObj) {
-
-    let retObj; //Return Object
-
-    if (!nameToArrInx[itemObj.name]) { //Checks
-      if (itemObj.id &&
-        itemObj.name &&
-        itemObj.price &&
-        itemObj.inventory) {
-        nameToArrInx[itemObj.name] = _productArr.length;
-        idToArrInx[itemObj.id] = _productArr.length;
-        _productArr.push(itemObj);
-        retObj = { success: true };
-      } else {
-        retObj = {
-          success: false,
-          reason: 'Missing item parameters.'
-        };
-      }
-    } else {
-      retObj = {
-        success: false,
-        reason: 'Item already exists, send a PUT request to edit an existing item.'
-      }
-    }
-    return retObj;
+  function addProduct(prodParams) {
+    let temp = {
+      name: prodParams.title,
+      price: prodParams.body,
+      inventory: prodParams.author
+    };
   }
 
   function editItem(uid, objEditFields) {
@@ -66,14 +26,15 @@ function productDB() {
       } else {
         retObj = {
           success: false,
-          reason: 'No product fields were provided. Change to name, price, or inventory.',
+          reason:
+            "No product fields were provided. Change to name, price, or inventory.",
           id: uid
         };
       }
     } else {
       retObj = {
         success: false,
-        reason: 'Item does not exist, try a POST request to create the item.',
+        reason: "Item does not exist, try a POST request to create the item.",
         id: uid
       };
     }
@@ -84,12 +45,12 @@ function productDB() {
     let retObj;
 
     if (_productArr[idToArrInx[uid]]) {
-      _productArr[idToArrInx[uid]] = '';
+      _productArr[idToArrInx[uid]] = "";
       retObj = { success: true, uid: uid };
     } else {
       retObj = {
         success: false,
-        reason: 'Item does not exist, try a POST request to create the item.',
+        reason: "Item does not exist, try a POST request to create the item.",
         id: uid
       };
     }
@@ -97,22 +58,35 @@ function productDB() {
     return retObj;
   }
 
-  function returnItem(uid) {
-    console.log(uid);
-    return _productArr[idToArrInx[uid]];
+  function returnProduct(id) {
+    return db("products")
+      .select()
+      .where({ id: id })
+      .then(product => {
+        if (!product.length) {
+          throw new Error("Product doesn't exist");
+        }
+        return product[0];
+      });
   }
 
-
-  function returnArray() {
-    return _productArr;
+  function returnProducts() {
+    return db("products")
+      .select()
+      .then(products => {
+        if (!products.length) {
+          throw new Error("No products to return");
+        }
+        return products;
+      });
   }
 
   return {
-    addProd: addItem,
+    addProd: addProduct,
     editProd: editItem,
     removeProd: removeItem,
-    prodCatalog: returnArray,
-    getProd: returnItem
+    returnProducts,
+    returnProduct
   };
 }
 
